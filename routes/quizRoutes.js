@@ -5,8 +5,9 @@ const questionController = require("./../controllers/questionController");
 const auth = require("./../middlewares/auth");
 const Router = express.Router();
 
-// @private
-Router.route("/").post(auth, quizController.createQuiz);
+Router.route("/")
+  .post(auth, quizController.createQuiz)
+  .get(quizController.getAllQuiz);
 
 Router.route("/:id")
   .delete(auth, quizController.deleteQuiz)

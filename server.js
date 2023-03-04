@@ -7,6 +7,7 @@ const profileRoutes = require("./routes/profileRoutes");
 const globalError = require("./middlewares/globalError");
 const quizRoutes = require("./routes/quizRoutes");
 const questionRoutes = require("./routes/questionRoutes");
+const userResRoutes = require("./routes/userResRoutes");
 const connectDB = require("./utils/db");
 
 dotenv.config({
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use("/", profileRoutes);
 app.use("/quiz", quizRoutes);
 app.use("/questions", questionRoutes);
+app.use("/response", userResRoutes);
 
 cloudinary.config({
   api_key: process.env.CLOUD_API_KEY,

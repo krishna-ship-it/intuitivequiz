@@ -26,10 +26,6 @@ const responseSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  score: {
-    type: Number,
-    default: 0,
-  },
 });
 
 module.exports = mongoose.model("UserResponse", responseSchema);

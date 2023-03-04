@@ -10,7 +10,7 @@ exports.createQuiz = catchAsyncError(async (req, res, next) => {
   });
 });
 exports.getQuiz = catchAsyncError(async (req, res, next) => {
-  const quiz = await Quiz.findById(req.params.id).populate("questions");
+  let quiz = await Quiz.findById(req.params.id).populate("questions host");
   res.status(200).json({
     quiz,
     totalQuestions: quiz.questions.length,
@@ -28,5 +28,12 @@ exports.deleteQuiz = catchAsyncError(async (req, res, next) => {
   await Quiz.findByIdAndDelete(quizId);
   res.status(202).json({
     message: "quiz deleted",
+  });
+});
+
+exports.getAllQuiz = catchAsyncError(async (req, res, next) => {
+  const quizs = await Quiz.find();
+  res.status(200).json({
+    quizs,
   });
 });

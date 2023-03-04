@@ -14,6 +14,7 @@ const questionSchema = new mongoose.Schema({
   correctOption: {
     type: String,
     required: [true, "correct answer is required"],
+    select: false,
   },
   options: {
     type: [String],

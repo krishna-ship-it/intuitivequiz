@@ -6,6 +6,7 @@ const util = require("util");
 const catchAsyncError = require("./../utils/CatchAsyncError");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const UserResponse = require("./../models/userResponseModel");
 
 const signJWT = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "90d" });
@@ -99,7 +100,7 @@ exports.changePassword = catchAsyncError(async (req, res, next) => {
 exports.deleteAccount = catchAsyncError(async (req, res, next) => {
   const { password } = req.body;
   if (!password) return next(new AppError("please enter your password"));
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id).select("+password");
 
   if (!(await checkPassword(password, user.password)))
     return next(new AppError("Wrong password", 401));
@@ -107,6 +108,19 @@ exports.deleteAccount = catchAsyncError(async (req, res, next) => {
     await destroyImgFromCloudinary(user.imgPublicId, user);
   }
 
+  // deleting the responses of user
+  const responses = await UserResponse.find({ user: req.user.id });
+  responses.forEach(async (r) => {
+    await UserResponse.findByIdAndDelete(r._id);
+  });
+
   await User.findByIdAndDelete(req.user.id);
   res.status(200).json({ message: "account deleted" });
+});
+
+exports.getLoggedInUser = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("-password");
+  res.status(200).json({
+    user,
+  });
 });
